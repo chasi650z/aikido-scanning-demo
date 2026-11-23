@@ -19,7 +19,7 @@ jobs:
 
       - name: Run Aikido Local Scanner
         env:
-          AIKIDO_API_KEY: ${{ secrets.AIKIDO_API_KEY_LOCAL }}
+          AIKIDO_API_KEY: ${{ secrets.AIKIDO_API_KEY }}
         run: |
           aikido-local-scanner scan source-code \
             --repositoryname "${{ github.event.repository.name }}" \
