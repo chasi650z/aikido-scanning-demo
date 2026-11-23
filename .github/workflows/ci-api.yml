@@ -22,7 +22,7 @@ jobs:
 
       - name: Run Aikido CI API Scan
         env:
-          AIKIDO_CLIENT_API_KEY: ${{ secrets.AIKIDO_CLIENT_API_KEY }}
+          AIKIDO_CLIENT_API_KEY: ${{ secrets.AIKIDO_API_KEY }}
           REPOSITORY_NAME: ${{ github.event.repository.name }}
         run: |
           aikido-api-client scan-release \
