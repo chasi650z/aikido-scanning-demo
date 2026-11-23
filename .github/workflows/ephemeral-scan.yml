@@ -1,0 +1,43 @@
+name: Aikido - Ephemeral Scanning
+
+on:
+  workflow_dispatch:
+
+jobs:
+  ephemeral-scan:
+    name: Aikido Ephemeral Security Scan
+    runs-on: ubuntu-latest
+
+    container:
+      image: aikidosecurity/local-scanner:latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Verify API Key
+        env:
+          AIKIDO_API_KEY: ${{ secrets.AIKIDO_API_KEY }}
+        run: |
+          if [ -z "$AIKIDO_API_KEY" ]; then
+            echo "ERROR: AIKIDO_API_KEY no está configurado"
+            exit 1
+          fi
+          echo "API Key disponible"
+
+      - name: Run Aikido Ephemeral Scan
+        env:
+          AIKIDO_API_KEY: ${{ secrets.AIKIDO_API_KEY }}
+        run: |
+          aikido-local-scanner ephemeral-scan . \
+            --apikey "$AIKIDO_API_KEY" \
+            --result-output aikido-scan-results.json \
+            --fail-on critical
+
+      - name: Upload JSON Results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: aikido-ephemeral-results
+          path: aikido-scan-results.json
+          if-no-files-found: warn
