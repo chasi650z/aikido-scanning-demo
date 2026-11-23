@@ -1,0 +1,26 @@
+name: Aikido - Local Scanner
+
+on:
+  workflow_dispatch:
+
+jobs:
+  local-scanner:
+    name: Aikido Local Security Scan
+    runs-on: ubuntu-latest
+
+    container:
+      image: aikidosecurity/local-scanner:latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          path: source-code
+
+      - name: Run Aikido Local Scanner
+        env:
+          AIKIDO_API_KEY: ${{ secrets.AIKIDO_API_KEY }}
+        run: |
+          aikido-local-scanner scan source-code \
+            --repositoryname "${{ github.event.repository.name }}" \
+            --branchname main
